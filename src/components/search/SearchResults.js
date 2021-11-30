@@ -7,6 +7,7 @@ export default () => {
     const location = useLocation()
 
     const displayAnimals = () => {
+        
         if (location.state?.animals.length) {
             return (
                 <React.Fragment>
