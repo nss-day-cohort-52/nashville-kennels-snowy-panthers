@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { useHistory, useParams } from "react-router";
-import AnimalRepository from "../../repositories/AnimalRepository";
-import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
-import OwnerRepository from "../../repositories/OwnerRepository";
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import { useHistory, useParams } from "react-router-dom"
+import AnimalRepository from "../../repositories/AnimalRepository"
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
+import OwnerRepository from "../../repositories/OwnerRepository"
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
+import useResourceResolver from "../../hooks/resource/useResourceResolver"
 import "./AnimalCard.css"
+import { prependOnceListener } from "process"
 
+// export to animalList.js
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
@@ -18,6 +20,16 @@ export const Animal = ({ animal, syncAnimals,
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
+
+        useEffect(
+            () => {
+                fetch("http://localhost:8088/animalCaretakers")
+                    .then(res => res.json())
+                    .then(syncAnimalCaretakers)
+            },
+            []
+        )
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -84,13 +96,15 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                            <div >{
+                            currentAnimal?.animalCaretakers?.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</option>)
+                        } </div>
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                               <div > Owned by unknown</div>
                             </span>
 
                             {
@@ -135,8 +149,10 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => {
+                                            AnimalRepository.removeAnimal(currentAnimal.id)
+                                        }) // Remove animal
+                                        .then(() => syncAnimals()) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }

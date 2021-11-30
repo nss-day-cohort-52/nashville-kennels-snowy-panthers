@@ -1,5 +1,5 @@
 import Settings from "./Settings"
-import { fetchIt } from "./Fetch"
+import { fetchIt, request } from "./Fetch"
 import OwnerRepository from "./OwnerRepository"
 
 const expandAnimalUser = (animal, users) => {
@@ -55,6 +55,12 @@ export default {
             `${Settings.remoteURL}/animals/${editedAnimal.id}`,
             "PUT",
             JSON.stringify(editedAnimal)
+        )
+    },
+    async removeAnimal(dischargedAnimal) {
+        return await request.delete(
+            `${Settings.remoteURL}/animals/${dischargedAnimal}`,
+            "DELETE"
         )
     }
 }
