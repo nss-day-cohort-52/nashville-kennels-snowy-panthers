@@ -29,17 +29,6 @@ export const Animal = ({ animal, syncAnimals,
             },
             []
         )
-    // useEffect(
-    //     () => {
-    //         return fetch(`http://localhost:8088/animalCaretakers?_expand=animal`)
-    //             .then(response => response.json())
-    //             .then((data) => {
-    //                 assignedCaretaker(data)
-    //             })
-
-    //     },
-    //     []  // Above function runs when the value of assignedCaretaker changes
-    // )
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -106,19 +95,9 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                            <div >unkonwn </div>
-                            {/* <div className="animal__caretaker">Assigned to */}
-                    {/* <select
-                        value={ animal.animalId }
-                        onChange={ syncAnimalCaretakers }>
-                        {
-                            animalCaretakers.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.animalId}</option>)
-                        }
-                    </select>
-                </div>
-                                <div >unkonwn    }
-                                     {/* {animal.animalCaretaker?.name} */}
-                                     {/* </div> */}
+                            <div >{
+                            currentAnimal?.animalCaretakers?.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</option>)
+                        } </div>
                             </span>
 
 
