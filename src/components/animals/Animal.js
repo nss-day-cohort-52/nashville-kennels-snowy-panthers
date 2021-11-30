@@ -20,6 +20,16 @@ export const Animal = ({ animal, syncAnimals,
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
+
+        useEffect(
+            () => {
+                fetch("http://localhost:8088/animalCaretakers")
+                    .then(res => res.json())
+                    .then(syncAnimalCaretakers)
+            },
+            []
+        )
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -86,13 +96,15 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                            <div >{
+                            currentAnimal?.animalCaretakers?.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</option>)
+                        } </div>
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                               <div > Owned by unknown</div>
                             </span>
 
                             {
