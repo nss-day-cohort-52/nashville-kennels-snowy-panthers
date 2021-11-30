@@ -6,6 +6,7 @@ import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
+import { userInfo } from "os";
 
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
@@ -18,6 +19,27 @@ export const Animal = ({ animal, syncAnimals,
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
+
+        useEffect(
+            () => {
+                fetch("http://localhost:8088/animalCaretakers")
+                    .then(res => res.json())
+                    .then(syncAnimalCaretakers)
+            },
+            []
+        )
+    // useEffect(
+    //     () => {
+    //         return fetch(`http://localhost:8088/animalCaretakers?_expand=animal`)
+    //             .then(response => response.json())
+    //             .then((data) => {
+    //                 assignedCaretaker(data)
+    //             })
+
+    //     },
+    //     []  // Above function runs when the value of assignedCaretaker changes
+    // )
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -84,13 +106,25 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                            <div >unkonwn </div>
+                            {/* <div className="animal__caretaker">Assigned to */}
+                    {/* <select
+                        value={ animal.animalId }
+                        onChange={ syncAnimalCaretakers }>
+                        {
+                            animalCaretakers.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.animalId}</option>)
+                        }
+                    </select>
+                </div>
+                                <div >unkonwn    }
+                                     {/* {animal.animalCaretaker?.name} */}
+                                     {/* </div> */}
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                               <div > Owned by unknown</div>
                             </span>
 
                             {
