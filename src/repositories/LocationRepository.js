@@ -39,3 +39,4 @@ export default {
         return await fetchIt(`${Settings.remoteURL}/locations?_embed=animals&_embed=employeeLocations`)
     }
 }
+
