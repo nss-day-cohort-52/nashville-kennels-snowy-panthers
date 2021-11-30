@@ -6,6 +6,7 @@ import OwnerRepository from "../../repositories/OwnerRepository"
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 import useResourceResolver from "../../hooks/resource/useResourceResolver"
 import "./AnimalCard.css"
+import { prependOnceListener } from "process"
 
 // export to animalList.js
 export const Animal = ({ animal, syncAnimals,
@@ -136,8 +137,10 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => {
+                                            AnimalRepository.removeAnimal(currentAnimal.id)
+                                        }) // Remove animal
+                                        .then(() => syncAnimals()) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }

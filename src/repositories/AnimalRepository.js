@@ -1,5 +1,5 @@
 import Settings from "./Settings"
-import { fetchIt } from "./Fetch"
+import { fetchIt, request } from "./Fetch"
 import OwnerRepository from "./OwnerRepository"
 
 const expandAnimalUser = (animal, users) => {
@@ -57,18 +57,9 @@ export default {
             JSON.stringify(editedAnimal)
         )
     },
-    async removeAnimal(id) {
-        const e = await fetch(`${Settings.remoteURL}/animals/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("kennel_token")}`
-            }
-        })
-        return await e.json()
-    },
     async removeAnimal(dischargedAnimal) {
-        return await fetchIt(
-            `${Settings.remoteURL}/animals/${dischargedAnimal.id}`,
+        return await request.delete(
+            `${Settings.remoteURL}/animals/${dischargedAnimal}`,
             "DELETE"
         )
     }
