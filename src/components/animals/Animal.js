@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { useHistory, useParams } from "react-router";
-import AnimalRepository from "../../repositories/AnimalRepository";
-import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
-import OwnerRepository from "../../repositories/OwnerRepository";
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import { useHistory, useParams } from "react-router-dom"
+import AnimalRepository from "../../repositories/AnimalRepository"
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
+import OwnerRepository from "../../repositories/OwnerRepository"
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
+import useResourceResolver from "../../hooks/resource/useResourceResolver"
 import "./AnimalCard.css"
-import { userInfo } from "os";
+import { prependOnceListener } from "process"
 
+// export to animalList.js
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
@@ -148,8 +149,10 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => {
+                                            AnimalRepository.removeAnimal(currentAnimal.id)
+                                        }) // Remove animal
+                                        .then(() => syncAnimals()) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
