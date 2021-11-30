@@ -35,24 +35,26 @@ export const AnimalListComponent = (props) => {
         setCurrentAnimal(animal)
         toggleDialog()
     }
-
+    const filteredAnimals = animalOwners.filter((a) => {
+        if (parseInt(getCurrentUser().id) === a.userId) {
+            return true
+        }
+        return false
+    })
     useEffect(() => {
         const handler = e => {
             if (e.keyCode === 27 && modalIsOpen) {
                 toggleDialog()
             }
         }
-
         window.addEventListener("keyup", handler)
 
         return () => window.removeEventListener("keyup", handler)
     }, [toggleDialog, modalIsOpen])
 
-
     return (
         <>
             <AnimalDialog toggleDialog={toggleDialog} animal={currentAnimal} />
-
 
             {
                 getCurrentUser().employee
@@ -66,17 +68,28 @@ export const AnimalListComponent = (props) => {
                     </div>
             }
 
-
             <ul className="animals">
                 {
-                    animals.map(anml =>
-                        <Animal key={`animal--${anml.id}`} animal={anml}
+                    getCurrentUser().employee
+                    ?    animals.map(anml => {
+                         return <Animal key={`animal--${anml.id}`} animal={anml}
                             animalOwners={animalOwners}
                             owners={owners}
                             syncAnimals={syncAnimals}
                             setAnimalOwners={setAnimalOwners}
                             showTreatmentHistory={showTreatmentHistory}
-                        />)
+                        />
+                        })
+                    :   filteredAnimals.map(a => {
+                            return <Animal key={`animal--${a.id}`} animal={a.animal}
+                            animalOwners={animalOwners}
+                            owners={owners}
+                            syncAnimals={syncAnimals}
+                            setAnimalOwners={setAnimalOwners}
+                            showTreatmentHistory={showTreatmentHistory}
+                        />
+                        }
+                    )
                 }
             </ul>
         </>
