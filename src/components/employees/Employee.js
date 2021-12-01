@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
-import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import person from "./person.png"
+import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./Employee.css"
+import person from "./person.png"
 
 
 export default ({ employee }) => {
@@ -15,12 +15,15 @@ export default ({ employee }) => {
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
 
-    useEffect(() => {
-        if (employeeId) {
-            defineClasses("card employee--single")
-        }
-        resolveResource(employee, employeeId, EmployeeRepository.get)
-    }, [])
+    useEffect(
+        () => {
+            if (employeeId) {
+                defineClasses("card employee--single")
+            }
+            resolveResource(employee, employeeId, EmployeeRepository.get)
+        },
+        []
+    )
 
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {

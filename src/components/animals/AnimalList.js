@@ -70,6 +70,7 @@ export const AnimalListComponent = (props) => {
 
             <ul className="animals">
                 {
+                    
                     getCurrentUser().employee
                     ?    animals.map(anml => {
                          return <Animal key={`animal--${anml.id}`} animal={anml}
@@ -92,6 +93,8 @@ export const AnimalListComponent = (props) => {
                     )
                 }
             </ul>
+
+            
         </>
     )
 }

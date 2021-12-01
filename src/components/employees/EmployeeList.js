@@ -5,19 +5,25 @@ import "./EmployeeList.css"
 
 
 export default () => {
-    const [emps, setEmployees] = useState([])
+    const [employees, setEmployees] = useState([])
+
+    const syncEmployees = () => {
+        EmployeeRepository.getAll().then(data => setEmployees(data))
+    }
 
     useEffect(
         () => {
-            EmployeeRepository.getAll()
-        }, []
+            EmployeeRepository.getAll().then(setEmployees)
+            syncEmployees()
+        },
+        []
     )
 
     return (
         <>
             <div className="employees">
                 {
-                    emps.map(a => <Employee key={a.id} employee={a} />)
+                    employees.map(a => <Employee key={a.id} employee={a} />)
                 }
             </div>
         </>
