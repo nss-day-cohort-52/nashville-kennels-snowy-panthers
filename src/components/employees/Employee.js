@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
-import EmployeeRepository from "../../repositories/EmployeeRepository";
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
+import EmployeeRepository from "../../repositories/EmployeeRepository"
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./Employee.css"
 import person from "./person.png"
 
 
-export default ({ employee }) => {
+export default ({ employee, syncEmployees }) => {
+    const [isEmployee, setAuth] = useState(false)
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    
+    useEffect(() => {
+        setAuth(getCurrentUser().employee)
+        resolveResource(employee, employeeId, EmployeeRepository.get)
+    }, [])
 
-    useEffect(
+   useEffect(
         () => {
             if (employeeId) {
                 defineClasses("card employee--single")
@@ -31,7 +37,7 @@ export default ({ employee }) => {
         }
     }, [resource])
 
-    return (
+     return (
         <article className={classes}>
             <section className="card-body">
                 <img alt="Kennel employee icon" src={person} className="icon--person" />
@@ -46,7 +52,6 @@ export default ({ employee }) => {
                                 }}>
                                 {resource.name}
                             </Link>
-
                     }
                 </h5>
                 {
@@ -61,13 +66,20 @@ export default ({ employee }) => {
                         </>
                         : ""
                 }
+                
 
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    isEmployee
+                        ?
+                        <button className="btn--fireEmployee" onClick={() => 
+                            EmployeeRepository
+                                .delete(employee.id)
+                                .then(() => {
+                                    syncEmployees()
+                                })}>Fire</button>
+                    : ""
                 }
-
             </section>
-
         </article>
     )
 }
