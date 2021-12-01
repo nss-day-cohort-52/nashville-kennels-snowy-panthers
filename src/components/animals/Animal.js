@@ -22,14 +22,14 @@ export const Animal = ({ animal, syncAnimals,
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
     const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
 
-        useEffect(
-            () => {
-                fetch("http://localhost:8088/animalCaretakers")
-                    .then(res => res.json())
-                    .then(syncAnimalCaretakers)
-            },
-            []
-        )
+    useEffect(
+        () => {
+            fetch("http://localhost:8088/animalCaretakers")
+                .then(res => res.json())
+                .then(syncAnimalCaretakers)
+        },
+        []
+    )
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
