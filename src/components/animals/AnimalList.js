@@ -39,8 +39,8 @@ export const AnimalListComponent = (props) => {
         if (parseInt(getCurrentUser().id) === a.userId) {
             return true
         }
-        return false
-    })
+            return false
+        })
     useEffect(() => {
         const handler = e => {
             if (e.keyCode === 27 && modalIsOpen) {
@@ -70,6 +70,7 @@ export const AnimalListComponent = (props) => {
 
             <ul className="animals">
                 {
+                    
                     getCurrentUser().employee
                     ?    animals.map(anml => {
                          return <Animal key={`animal--${anml.id}`} animal={anml}
@@ -92,6 +93,8 @@ export const AnimalListComponent = (props) => {
                     )
                 }
             </ul>
+
+            
         </>
     )
 }
