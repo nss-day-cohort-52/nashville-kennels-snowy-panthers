@@ -1,7 +1,8 @@
-import React from "react"
+// import React from "react"
 import { Link } from "react-router-dom"
 import locationImage from "./location.png"
 import "./Location.css"
+import React, { useState } from "react"
 
 
 export default ({location}) => {
@@ -20,10 +21,18 @@ export default ({location}) => {
                 </h5>
             </section>
             <section>
-                Total animals
+                Total Animals
+                    {
+                        ` ${location.animals.length}`
+                    }
             </section>
             <section>
-                Total locations
+            <p className="lead detailCard__info">
+                Total Employees 
+                    {
+                        ` ${location.employeeLocations.length}`
+                    }
+                </p>
             </section>
         </article>
     )
