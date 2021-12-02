@@ -26,11 +26,14 @@ export const AnimalListComponent = (props) => {
     }
 
     useEffect(() => {
-        OwnerRepository.getAllCustomers().then(updateOwners)
-        AnimalOwnerRepository.getAll().then(setAnimalOwners)
-        syncAnimals()
+         
+         OwnerRepository.getAllCustomers().then(updateOwners)
+         AnimalOwnerRepository.getAll().then(setAnimalOwners)
+         syncAnimals()
+         
     }, [])
 
+    
     const showTreatmentHistory = animal => {
         setCurrentAnimal(animal)
         toggleDialog()
@@ -41,6 +44,7 @@ export const AnimalListComponent = (props) => {
         }
         return false
     })
+   
     useEffect(() => {
         const handler = e => {
             if (e.keyCode === 27 && modalIsOpen) {
@@ -81,7 +85,7 @@ export const AnimalListComponent = (props) => {
                         />
                         })
                     :   filteredAnimals.map(a => {
-                            return <Animal key={`animal--${a.id}`} animal={a.animal}
+                            return <Animal key={`animal--${a.animal.id}`} animal={a.animal}
                             animalOwners={animalOwners}
                             owners={owners}
                             syncAnimals={syncAnimals}
