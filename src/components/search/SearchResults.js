@@ -1,22 +1,36 @@
 import React from "react"
 import { useLocation } from "react-router-dom";
 import "./SearchResults.css"
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
+
+
+import {AnimalListComponent} from "../animals/AnimalList"
+import {LocationList} from "../locations/LocationList"
+import  EmployeeList from "../employees/EmployeeList"
 
 
 export default () => {
     const location = useLocation()
-
+    const { getCurrentUser } = useSimpleAuth()
+    
     const displayAnimals = () => {
-        if (location.state?.animals.length) {
+        
+        if (location.state?.animals.length && !!getCurrentUser().employee) {
             return (
                 <React.Fragment>
                     <h2>Matching Animals</h2>
-                    <section className="animals">
-                        Display matching animals
-                    </section>
+                    <div>
+                        <AnimalListComponent />
+                    </div>
+                 
                 </React.Fragment>
-            )
-        }
+            )} else if (location.state?.animals.length && !getCurrentUser().employee) {
+                return (
+                    <React.Fragment>
+                        <h2>Only employees can search for animals, sorry.</h2>
+                    </React.Fragment>
+                )
+            }
     }
 
     const displayEmployees = () => {
@@ -25,7 +39,9 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Employees</h2>
                     <section className="employees">
-                        Display matching employees
+                        <div>
+                            <EmployeeList />
+                        </div>
                     </section>
                 </React.Fragment>
             )
@@ -38,7 +54,9 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Locations</h2>
                     <section className="locations">
-                        Display matching locations
+                        <div>
+                            <LocationList />
+                        </div>
                     </section>
                 </React.Fragment>
             )
