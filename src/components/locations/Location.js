@@ -6,7 +6,6 @@ import React, { useState } from "react"
 
 
 export default ({location}) => {
-    const [animals, setAnimals] = useState([])
     return (
         <article className="card location" style={{ width: `18rem` }}>
             <section className="card-body">
@@ -22,10 +21,10 @@ export default ({location}) => {
                 </h5>
             </section>
             <section>
-                Total animals
-                    {/* {
-                        ` ${location.animal.locationId.length}`
-                    } */}
+                Total Animals
+                    {
+                        ` ${location.animals.length}`
+                    }
             </section>
             <section>
             <p className="lead detailCard__info">
