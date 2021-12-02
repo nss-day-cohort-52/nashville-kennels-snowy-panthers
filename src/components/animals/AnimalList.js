@@ -7,6 +7,7 @@ import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
 import useModal from "../../hooks/ui/useModal"
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 import OwnerRepository from "../../repositories/OwnerRepository"
+import { useLocation } from "react-router-dom";
 
 import "./AnimalList.css"
 import "./cursor.css"
@@ -20,17 +21,20 @@ export const AnimalListComponent = (props) => {
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     let { toggleDialog, modalIsOpen } = useModal("#dialog--animal")
+    const location = useLocation()
 
     const syncAnimals = () => {
         AnimalRepository.getAll().then(data => petAnimals(data))
     }
 
     useEffect(() => {
-        OwnerRepository.getAllCustomers().then(updateOwners)
-        AnimalOwnerRepository.getAll().then(setAnimalOwners)
-        syncAnimals()
+         
+         OwnerRepository.getAllCustomers().then(updateOwners)
+         AnimalOwnerRepository.getAll().then(setAnimalOwners)
+         syncAnimals()
+         
     }, [])
-
+    
     const showTreatmentHistory = animal => {
         setCurrentAnimal(animal)
         toggleDialog()
@@ -39,8 +43,9 @@ export const AnimalListComponent = (props) => {
         if (parseInt(getCurrentUser().id) === a.userId) {
             return true
         }
-            return false
-        })
+        return false
+    })
+    
     useEffect(() => {
         const handler = e => {
             if (e.keyCode === 27 && modalIsOpen) {
@@ -69,32 +74,43 @@ export const AnimalListComponent = (props) => {
             }
 
             <ul className="animals">
+
                 {
-                    
-                    getCurrentUser().employee
-                    ?    animals.map(anml => {
-                         return <Animal key={`animal--${anml.id}`} animal={anml}
+                    !!location.state?.animals.length
+                    ? location.state.animals.map((animal) => {
+                        return <Animal key={`animal--${animal.id}`} animal={animal}
                             animalOwners={animalOwners}
                             owners={owners}
                             syncAnimals={syncAnimals}
                             setAnimalOwners={setAnimalOwners}
                             showTreatmentHistory={showTreatmentHistory}
                         />
-                        })
-                    :   filteredAnimals.map(a => {
-                            return <Animal key={`animal--${a.id}`} animal={a.animal}
-                            animalOwners={animalOwners}
-                            owners={owners}
-                            syncAnimals={syncAnimals}
-                            setAnimalOwners={setAnimalOwners}
-                            showTreatmentHistory={showTreatmentHistory}
-                        />
-                        }
-                    )
+
+                    })
+                    :  
+                        getCurrentUser().employee
+                        ?    animals.map(anml => {
+                             return <Animal key={`animal--${anml.id}`} animal={anml}
+                                animalOwners={animalOwners}
+                                owners={owners}
+                                syncAnimals={syncAnimals}
+                                setAnimalOwners={setAnimalOwners}
+                                showTreatmentHistory={showTreatmentHistory}
+                            />
+                            })
+                            
+                        :   filteredAnimals.map(a => {
+                                return <Animal key={`animal--${a.animal.id}`} animal={a.animal}
+                                animalOwners={animalOwners}
+                                owners={owners}
+                                syncAnimals={syncAnimals}
+                                setAnimalOwners={setAnimalOwners}
+                                showTreatmentHistory={showTreatmentHistory}
+                            />
+                            }
+                        )
                 }
             </ul>
-
-            
         </>
     )
 }
