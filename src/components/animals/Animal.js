@@ -14,6 +14,7 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
+    debugger
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
@@ -41,7 +42,7 @@ export const Animal = ({ animal, syncAnimals,
             registerOwners(owners)
         }
     }, [owners])
-
+    
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
@@ -122,7 +123,7 @@ export const Animal = ({ animal, syncAnimals,
                                         className="form-control small"
                                         onChange={() => {}} >
                                         <option value="">
-                                            Select {myOwners.length === 1 ? "another" : "an"} owner
+                                            Select {myOwners.length < 1 ? "an" : "another"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
