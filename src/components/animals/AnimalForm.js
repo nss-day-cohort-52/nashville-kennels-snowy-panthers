@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import EmployeeRepository from "../../repositories/EmployeeRepository"
 
 
 export default (props) => {
@@ -11,9 +12,16 @@ export default (props) => {
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
 
+    useEffect(() => {
+        EmployeeRepository.getAll().then(setEmployees)
+
+    },
+    []
+    )
+
     const constructNewAnimal = evt => {
         evt.preventDefault()
-        const eId = parseInt(employeeId)
+        const eId = employeeId
 
         if (eId === 0) {
             window.alert("Please select a caretaker")
@@ -23,12 +31,12 @@ export default (props) => {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: parseInt(emp.employeeLocations.locationId)
             }
 
             AnimalRepository.addAnimal(animal)
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                // .then(() => props.history.push("/animals"))
         }
     }
 
@@ -65,7 +73,7 @@ export default (props) => {
                     name="employee"
                     id="employeeId"
                     className="form-control"
-                    onChange={e => setEmployeeId(e.target.value)}
+                    onChange={e => setEmployeeId(parseInt(e.target.value))}
                 >
                     <option value="">Select an employee</option>
                     {employees.map(e => (
