@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
 import EmployeeRepository from "../../repositories/EmployeeRepository"
+import {useHistory} from "react-router-dom"
+
 
 
 export default (props) => {
@@ -11,10 +13,11 @@ export default (props) => {
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const history = useHistory()
 
     useEffect(() => {
-        EmployeeRepository.getAll().then(setEmployees)
-
+        EmployeeRepository.getAll()
+        .then(setEmployees)
     },
     []
     )
@@ -22,21 +25,25 @@ export default (props) => {
     const constructNewAnimal = evt => {
         evt.preventDefault()
         const eId = employeeId
-
+        
         if (eId === 0) {
             window.alert("Please select a caretaker")
         } else {
             const emp = employees.find(e => e.id === eId)
+           const empLocation = emp.employeeLocations.map((a) => {
+                return a.locationId
+            })
+
             const animal = {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.employeeLocations.locationId)
+                locationId: +empLocation.join("")
             }
 
             AnimalRepository.addAnimal(animal)
                 .then(() => setEnabled(true))
-                // .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"))
         }
     }
 
