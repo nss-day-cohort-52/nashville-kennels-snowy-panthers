@@ -1,10 +1,12 @@
-import React from "react"
+// import React from "react"
 import { Link } from "react-router-dom"
 import locationImage from "./location.png"
 import "./Location.css"
+import React, { useState } from "react"
 
 
 export default ({location}) => {
+    const [animals, setAnimals] = useState([])
     return (
         <article className="card location" style={{ width: `18rem` }}>
             <section className="card-body">
@@ -21,9 +23,17 @@ export default ({location}) => {
             </section>
             <section>
                 Total animals
+                    {/* {
+                        ` ${location.animal.locationId.length}`
+                    } */}
             </section>
             <section>
-                Total locations
+            <p className="lead detailCard__info">
+                Total Employees 
+                    {
+                        ` ${location.employeeLocations.length}`
+                    }
+                </p>
             </section>
         </article>
     )
