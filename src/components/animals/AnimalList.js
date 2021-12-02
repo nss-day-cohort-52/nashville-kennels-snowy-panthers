@@ -39,8 +39,8 @@ export const AnimalListComponent = (props) => {
         if (parseInt(getCurrentUser().id) === a.userId) {
             return true
         }
-        return false
-    })
+            return false
+        })
     useEffect(() => {
         const handler = e => {
             if (e.keyCode === 27 && modalIsOpen) {
