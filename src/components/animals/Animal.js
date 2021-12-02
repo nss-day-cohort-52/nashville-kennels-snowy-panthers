@@ -87,6 +87,7 @@ export const Animal = ({ animal, syncAnimals,
                                 }}> {currentAnimal.name}</button>
                         </h5>
                         <span className="card-text small">{currentAnimal.breed}</span>
+
                     </div>
 
                     <details open={detailsOpen}>
@@ -107,17 +108,16 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                                <div >
-                                    <div >
-                                        {
-                                            currentAnimal?.animalOwners?.map(animalOwner => <option key={`animalOwner--${animalOwner.id}`} value={animalOwner.id}>{animalOwner.user.name}</option>)
-                                        }
-                                    </div>
-                                </div>
+
+                               <div >                             {
+                            currentAnimal?.animalOwners?.map(animalOwner => <option key={`animalOwner--${animalOwner.id}`} value={animalOwner.id}>{animalOwner.user.name}</option>)} </div>
+                            
+
+                  
                             </span>
 
                             {
-                                myOwners.length < 2
+                                myOwners.length < 2  //This code controls the drop down, only displays if animal has less than 2 owners otherwise it won't display
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
