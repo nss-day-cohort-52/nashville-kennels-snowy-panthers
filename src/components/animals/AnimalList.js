@@ -34,18 +34,7 @@ export const AnimalListComponent = (props) => {
          syncAnimals()
          
     }, [])
-
-    const test = () => {
-        const anim = animals.filter((animal) => {
-            for (const a of location.state.animals) {
-                if (animal.id === a.id) {
-                    return true
-                }
-                return false
-            }
-        })
-        return anim
-    }
+    
     const showTreatmentHistory = animal => {
         setCurrentAnimal(animal)
         toggleDialog()
@@ -88,7 +77,7 @@ export const AnimalListComponent = (props) => {
 
                 {
                     !!location.state?.animals.length
-                    ? test().map((animal) => {
+                    ? location.state.animals.map((animal) => {
                         return <Animal key={`animal--${animal.id}`} animal={animal}
                             animalOwners={animalOwners}
                             owners={owners}
@@ -120,32 +109,7 @@ export const AnimalListComponent = (props) => {
                             />
                             }
                         )
-                    
                 }
-                {/* {
-                    getCurrentUser().employee
-                    ?    animals.map(anml => {
-                         return <Animal key={`animal--${anml.id}`} animal={anml}
-                            animalOwners={animalOwners}
-                            owners={owners}
-                            syncAnimals={syncAnimals}
-                            setAnimalOwners={setAnimalOwners}
-                            showTreatmentHistory={showTreatmentHistory}
-                        />
-                        })
-                        
-                    :   filteredAnimals.map(a => {
-                            return <Animal key={`animal--${a.animal.id}`} animal={a.animal}
-                            animalOwners={animalOwners}
-                            owners={owners}
-                            syncAnimals={syncAnimals}
-                            setAnimalOwners={setAnimalOwners}
-                            showTreatmentHistory={showTreatmentHistory}
-                        />
-                        }
-                    )
-                } */}
-
             </ul>
         </>
     )
