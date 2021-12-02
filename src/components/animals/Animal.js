@@ -10,7 +10,7 @@ import { prependOnceListener } from "process"
 
 // export to animalList.js
 export const Animal = ({ animal, syncAnimals,
-    showTreatmentHistory, owners }) => {
+    showTreatmentHistory, owners, assignedOwners, setter }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
@@ -69,6 +69,7 @@ export const Animal = ({ animal, syncAnimals,
             <li className={classes}>
                 <div className="card-body">
                     <div className="animal__header">
+                        {/*Show animal name with link to medical treatment history (if any)*/}
                         <h5 className="card-title">
                             <button className="link--card btn btn-link"
                                 style={{
@@ -76,6 +77,7 @@ export const Animal = ({ animal, syncAnimals,
                                     "textDecoration": "underline",
                                     "color": "rgb(94, 78, 196)"
                                 }}
+                                /* if user is an employee, allow click to reveal medical history */
                                 onClick={() => {
                                     if (isEmployee) {
                                         showTreatmentHistory(currentAnimal)
@@ -85,21 +87,24 @@ export const Animal = ({ animal, syncAnimals,
                                     }
                                 }}> {currentAnimal.name}</button>
                         </h5>
+                        {/* Show Breed */}
                         <span className="card-text small">{currentAnimal.breed}</span>
 
                     </div>
 
                     <details open={detailsOpen}>
+                        {/* Show randomly generated "stoplight" meter */}
                         <summary className="smaller">
                             <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
                         </summary>
 
                         <section>
+                            {/*Display "Caretaker" header and name.*/}
                             <h6>Caretaker(s)</h6>
                             <span className="small">
                                 <div >
                                     {
-                                        currentAnimal?.animalCaretakers?.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</option>)
+                                        currentAnimal?.animalCaretakers?.map(animalCaretaker => <div key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</div>)
                                     }
                                 </div>
                             </span>
@@ -121,15 +126,22 @@ export const Animal = ({ animal, syncAnimals,
                                         name="owner"
                                         className="form-control small"
                                         onChange={
-                                            (changeEvent) => {
-                                                
+                                            (evt) => {
+                                                 const copy = { ...assignedOwners }
+                                                 console.log(copy)
+                                                 copy.myOwner = myOwners.find(myOwner => myOwner.id === parseInt(evt.target.value)) || {}
+                                                 console.log(`This is ${evt.target.value}`)                                           
                                             }} >
-                                        <option value="">
-                                            Select {myOwners.length < 1 ? "an" : "another"} owner
-                                        </option>
-                                        {
-                                            allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
-                                        }
+                                            <option value="0">
+                                                Select {myOwners.length < 1 ? "an" : "another"} owner
+                                            </option>
+                                            {
+                                                allOwners.map(owner =>  {
+                                                    return <option
+                                                        key={owner.id}
+                                                        value={owner.id}>{owner.name}</option>
+                                                })
+                                            }
                                     </select>
                                     : null
                             }
