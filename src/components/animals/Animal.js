@@ -21,7 +21,7 @@ export const Animal = ({ animal, syncAnimals,
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
     const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
-
+    
     useEffect(
         () => {
             fetch("http://localhost:8088/animalCaretakers")
@@ -37,11 +37,15 @@ export const Animal = ({ animal, syncAnimals,
     }, [])
 
     useEffect(() => {
+        resolveResource(animal, animalId, AnimalRepository.get)
+    }, [animal])
+
+    useEffect(() => {
         if (owners) {
             registerOwners(owners)
         }
     }, [owners])
-
+    
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
@@ -97,40 +101,50 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                <div >
-                                    {
-                                        currentAnimal?.animalCaretakers?.map(animalCaretaker => <option key={`animalCaretaker--${animalCaretaker.id}`} value={animalCaretaker.id}>{animalCaretaker.user.name}</option>)
-                                    }
-                                </div>
-                            </span>
 
+                            {
+                                currentAnimal?.animalCaretakers?.map(animalCaretaker => {
+                                    return <div key={`animalCaretaker--${animalCaretaker.id}`}>
+                                        {animalCaretaker.user.name}
+                                    </div>
+                                })
+                                
+                            }
+
+                            </span>
 
                             <h6>Owners</h6>
                             <span className="small">
-
-                               <div >                             {
-                            currentAnimal?.animalOwners?.map(animalOwner => <option key={`animalOwner--${animalOwner.id}`} value={animalOwner.id}>{animalOwner.user.name}</option>)} </div>
-                            
-
-                  
+                                {
+                                    myOwners?.map(animalOwner => {
+                                        return <div key={`animalOwner--${animalOwner.id}`}>
+                                            {animalOwner.user.name}
+                                        </div>
+                                    })
+                                }
                             </span>
 
                             {
-                                myOwners.length < 2  //This code controls the drop down, only displays if animal has less than 2 owners otherwise it won't display
-                                    ? <select defaultValue=""
+                                myOwners.length < 2 && isEmployee
+                                    ? <select
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
-                                        <option value="">
-                                            Select {myOwners.length === 1 ? "another" : "an"} owner
-                                        </option>
+                                        onChange={
+                                            (chgEvt) => {
+                                                AnimalOwnerRepository
+                                                    .assignOwner(currentAnimal.id, parseInt(chgEvt.target.value))
+                                                    .then(() => syncAnimals() )
+                                            }
+                                        } >
+                                            <option value="0">
+                                                Select {myOwners.length < 1 ? "an" : "another"} owner
+                                            </option>
                                         {
-                                            allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                            allOwners.map(owner => <option key={owner.id} value={owner.id}>{owner.name}</option>)
                                         }
                                     </select>
                                     : null
                             }
-
 
                             {
                                 detailsOpen && "treatments" in currentAnimal
