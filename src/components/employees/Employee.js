@@ -10,7 +10,7 @@ import person from "./person.png"
 export default ({ employee, syncEmployees }) => {
     const [isEmployee, setAuth] = useState(false)
     const [animalCount, setCount] = useState(0)
-    const [location, markLocation] = useState({ name: "" })
+    const [location, markLocation] = useState([])
     const [classes, defineClasses] = useState("card employee")
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
@@ -32,10 +32,23 @@ export default ({ employee, syncEmployees }) => {
     )
 
     useEffect(() => {
-        if (resource?.employeeLocations?.length > 0) {
-            markLocation(resource.employeeLocations[0])
+        if (resource?.locations?.length > 0) {
+            markLocation(resource.locations)
         }
     }, [resource])
+
+    useEffect(() => {
+        const counter = resource?.animals?.length
+        setCount(counter)
+    },
+    [resource])
+
+    const func = () => {
+        const newArray = location.map((l) => {
+            return l.location.name
+        })
+        return newArray.join(", ")
+    }
 
      return (
         <article className={classes}>
@@ -58,16 +71,15 @@ export default ({ employee, syncEmployees }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for {animalCount} animals
                             </section>
                             <section>
-                                Working at unknown location
+                                Working at {func()} location(s)
                             </section>
                         </>
                         : ""
                 }
                 
-
                 {
                     isEmployee
                         ?
