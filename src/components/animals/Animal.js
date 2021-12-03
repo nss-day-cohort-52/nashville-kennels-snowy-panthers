@@ -21,7 +21,7 @@ export const Animal = ({ animal, syncAnimals,
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
     const [ animalCaretakers, syncAnimalCaretakers ] = useState({})
-
+    
     useEffect(
         () => {
             fetch("http://localhost:8088/animalCaretakers")
@@ -35,6 +35,10 @@ export const Animal = ({ animal, syncAnimals,
         setAuth(getCurrentUser().employee)
         resolveResource(animal, animalId, AnimalRepository.get)
     }, [])
+
+    useEffect(() => {
+        resolveResource(animal, animalId, AnimalRepository.get)
+    }, [animal])
 
     useEffect(() => {
         if (owners) {
@@ -63,6 +67,12 @@ export const Animal = ({ animal, syncAnimals,
                 })
         }
     }, [animalId])
+
+    const assignNewOwner = (chgEvt) => {
+            AnimalOwnerRepository
+                .assignOwner(currentAnimal.id, parseInt(chgEvt.target.value))
+                .then(() => syncAnimals() )
+    }
 
     return (
         <>
@@ -112,9 +122,9 @@ export const Animal = ({ animal, syncAnimals,
                             <h6>Owners</h6>
                             <span className="small">
                                 {
-                                    currentAnimal?.animalOwners?.map(animalOwner => {
+                                    myOwners?.map(animalOwner => {
                                         return <div key={`animalOwner--${animalOwner.id}`}>
-                                        {animalOwner.user.name}
+                                            {animalOwner.user.name}
                                         </div>
                                     })
                                 }
@@ -122,15 +132,17 @@ export const Animal = ({ animal, syncAnimals,
 
                             {
                                 myOwners.length < 2
-                                    ? <select defaultValue=""
+                                    ? <select
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
-                                        <option value="">
-                                            Select {myOwners.length < 1 ? "an" : "another"} owner
-                                        </option>
+                                        onChange={
+                                            assignNewOwner
+                                        } >
+                                            <option value="0">
+                                                Select {myOwners.length < 1 ? "an" : "another"} owner
+                                            </option>
                                         {
-                                            allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                            allOwners.map(owner => <option key={owner.id} value={owner.id}>{owner.name}</option>)
                                         }
                                     </select>
                                     : null
