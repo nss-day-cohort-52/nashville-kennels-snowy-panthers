@@ -68,12 +68,6 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
-    const assignNewOwner = (chgEvt) => {
-            AnimalOwnerRepository
-                .assignOwner(currentAnimal.id, parseInt(chgEvt.target.value))
-                .then(() => syncAnimals() )
-    }
-
     return (
         <>
             <li className={classes}>
@@ -136,7 +130,11 @@ export const Animal = ({ animal, syncAnimals,
                                         name="owner"
                                         className="form-control small"
                                         onChange={
-                                            assignNewOwner
+                                            (chgEvt) => {
+                                                AnimalOwnerRepository
+                                                    .assignOwner(currentAnimal.id, parseInt(chgEvt.target.value))
+                                                    .then(() => syncAnimals() )
+                                            }
                                         } >
                                             <option value="0">
                                                 Select {myOwners.length < 1 ? "an" : "another"} owner
